@@ -1,0 +1,12 @@
+---
+- hosts: web-servers
+  tasks:
+    - name: simple ping      
+      ping:
+
+    - name: copy html file
+      copy:
+          src: /tmp/index.html
+          dest: /var/www/html
+          mode: '0777'
+       become: true

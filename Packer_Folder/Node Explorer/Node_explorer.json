@@ -1,0 +1,41 @@
+{
+    "variables": {
+        "aws_access_key": "aws_access_key_id",
+        "aws_secret_key": "aws_secret_key_id"
+      },
+      "builders":[
+        {
+          "type": "amazon-ebs",
+          "region": "eu-west-2",
+          "instance_type": "t2.micro",
+          "source_ami": "ami-0a669382ea0feb73a",
+          "ssh_username": "ec2-user",
+          "ami_name": "websevernodes"
+        }
+      ],
+    
+    
+    "provisioners": [
+       {
+          "type": "file",
+          "source": "DAY2HOMEWORK.pem",
+          "destination": "~/"
+      },
+    
+
+     {
+      "type": "shell",
+      "inline": ["chmod 400 ~/DAY2HOMEWORK.pem",
+        "cat ~/DAY2HOMEWORK.pem >> /home/ec2-user/.ssh/authorized_keys"]
+    },
+    
+
+    {
+        "type": "file",
+        "source": "docker-compose.yml",
+        "destination": "~/"
+    }
+
+  ]
+    
+} 

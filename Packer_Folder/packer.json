@@ -1,0 +1,76 @@
+ {
+    "variables": {
+        "aws_access_key": "aws_access_key_id",
+        "aws_secret_key": "aws_secret_key_id"
+      },
+
+      "builders":[
+        {
+          "type": "amazon-ebs",
+          "region": "eu-west-2",
+          "instance_type": "t2.micro",
+          "source_ami": "ami-080b750a46edafc2b",
+          "ssh_username": "ec2-user",
+          "ami_name": "prometheus_new_image",
+          "vpc_id":  "vpc-47f3a62f",
+          "subnet_id": "subnet-06944697137c1428a",
+          "associate_public_ip_address": true
+        }
+      ],
+    
+    
+    "provisioners": [
+       {
+          "type": "file",
+          "source": "DAY2HOMEWORK.pem",
+          "destination": "~/"
+      },
+    
+
+     {
+      "type": "shell",
+      "inline": ["chmod 400 ~/DAY2HOMEWORK.pem",
+        "cat ~/DAY2HOMEWORK.pem >> /home/ec2-user/.ssh/authorized_keys"]
+    },
+    
+
+    {
+        "type": "shell",
+        "script": "docker.sh"
+        
+    },
+
+
+    {
+      "type": "shell",
+      "inline": ["mkdir -p ~/prometheus/config"]
+      },
+
+      {
+        "type": "shell",
+        "inline": ["mkdir -p ~/blackbox/config"]
+        },
+
+
+    {
+        "type": "file",
+        "source": "blackbox.yml",
+        "destination": "~/blackbox/config/blackbox.yml"
+    },
+
+     {
+        "type": "file",
+        "source": "prometheus.yml",
+        "destination": "~/prometheus/config/prometheus.yml"
+
+    },
+
+    {
+        "type": "file",
+        "source": "docker-compose.yml",
+        "destination": "~/"
+    }
+     
+   ]
+
+}  
